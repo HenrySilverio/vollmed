@@ -6,10 +6,11 @@ import med.voll.api.paciente.DadosListaPaciente;
 import med.voll.api.paciente.Paciente;
 import med.voll.api.paciente.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("pacientes")
@@ -25,7 +26,7 @@ public class PacienteController {
     }
 
     @GetMapping
-    public List<DadosListaPaciente> listar() {
-        return pacienteRepository.findAll().stream().map(DadosListaPaciente::new).toList();
+    public Page<DadosListaPaciente> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable pageable) {
+        return pacienteRepository.findAll(pageable).map(DadosListaPaciente::new);
     }
 }
